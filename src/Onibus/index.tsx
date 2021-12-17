@@ -1,20 +1,17 @@
-import {useNavigation, useNavigationState} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
   Text,
-  ScrollView,
   TouchableOpacity,
-  SafeAreaView,
   FlatList,
   View,
-  DatePickerIOSBase,
   Modal,
   StyleSheet,
   Pressable,
 } from 'react-native';
 import {TextInput} from 'react-native-paper';
 import {Divider} from 'react-native-elements';
-import {onibus, itinerario} from '../services/api';
+import {useNavigation} from '@react-navigation/native';
+import {onibus} from '../services/api';
 
 export function Onibus() {
   const [onibusArray, setOnibusArray] = useState([]);
@@ -24,7 +21,6 @@ export function Onibus() {
   const [modalVisible, setModalVisible] = useState(false);
   const [isStarted, setIsStarted] = useState(false);
   const [text, onChangeText] = useState('');
-  var cont = 0;
 
   async function getOnibus() {
     const {data} = await onibus.get('');
@@ -32,18 +28,10 @@ export function Onibus() {
     setTitleText('Lotação');
   }
 
-  async function getItinerario(id) {
-    const {data} = await itinerario.get('', {params: {p: id}});
-    setItinerarioArray(data);
-    setModalVisible(!modalVisible);
-  }
-
   const renderItem = ({item}) => (
     <TouchableOpacity
       onPress={() => {
-        console.log(item.id);
-        const result = onibusArray.find(element => element.id === item.id);
-        getItinerario(item.id);
+        setModalVisible(!modalVisible);
       }}>
       <Text style={{padding: 8}}>
         {titleText}: {item.nome} {item.codigo}
@@ -53,18 +41,17 @@ export function Onibus() {
   );
 
   useEffect(() => {
-    const found = onibusArray.filter(element => element.nome === text);
+    const found = onibusArray.filter(
+      element => element.nome === text.toUpperCase(),
+    );
     console.log(found);
     if (found.length > 0) {
-      console.log('entrou aqui');
-      cont = cont + 1;
       setOnibusArray(found);
     }
   }, [text]);
 
   useEffect(() => {
     getOnibus();
-
     console.log(text);
   }, [isStarted]);
 
@@ -76,8 +63,8 @@ export function Onibus() {
         onChangeText={onChangeText}
         value={text}
         placeholder="Pesquisar por Nome"
+        label="Pesquisar por Nome"
       />
-
       <FlatList
         data={onibusArray}
         renderItem={renderItem}
@@ -89,11 +76,9 @@ export function Onibus() {
           {backgroundColor: pressed ? '#8e44ad' : 'white'},
           {opacity: pressed ? 0.5 : 1},
         ]}
-        // style={[styles.button]}
         onPress={() => getOnibus()}>
         <Text style={styles.textStyle}>Atualizar</Text>
       </Pressable>
-
       <Modal
         animationType="slide"
         transparent={true}

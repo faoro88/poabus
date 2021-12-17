@@ -1,20 +1,17 @@
-import {useNavigation, useNavigationState} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
   Text,
-  ScrollView,
   TouchableOpacity,
-  SafeAreaView,
   FlatList,
   View,
-  DatePickerIOSBase,
   Modal,
   StyleSheet,
   Pressable,
 } from 'react-native';
 import {TextInput} from 'react-native-paper';
 import {Divider} from 'react-native-elements';
-import {lotacao, itinerario} from '../services/api';
+import {useNavigation} from '@react-navigation/native';
+import {lotacao} from '../services/api';
 
 export function Lotacoes() {
   const [lotacaoArray, setLotacaoArray] = useState([]);
@@ -24,7 +21,6 @@ export function Lotacoes() {
   const [modalVisible, setModalVisible] = useState(false);
   const [isStarted, setIsStarted] = useState(false);
   const [text, onChangeText] = useState('');
-  var cont = 0;
 
   async function getLotacao() {
     const {data} = await lotacao.get('');
@@ -32,18 +28,12 @@ export function Lotacoes() {
     setTitleText('Lotação');
   }
 
-  async function getItinerario(id) {
-    const {data} = await itinerario.get('', {params: {p: id}});
-    setItinerarioArray(data);
-    setModalVisible(!modalVisible);
-  }
-
   const renderItem = ({item}) => (
     <TouchableOpacity
       onPress={() => {
         console.log(item.id);
         const result = lotacaoArray.find(element => element.id === item.id);
-        getItinerario(item.id);
+        setModalVisible(!modalVisible);
       }}>
       <Text style={{padding: 8}}>
         {titleText}: {item.nome} {item.codigo}
@@ -53,18 +43,17 @@ export function Lotacoes() {
   );
 
   useEffect(() => {
-    const found = lotacaoArray.filter(element => element.nome === text);
+    const found = lotacaoArray.filter(
+      element => element.nome === text.toUpperCase(),
+    );
     console.log(found);
     if (found.length > 0) {
-      console.log('entrou aqui');
-      cont = cont + 1;
       setLotacaoArray(found);
     }
   }, [text]);
 
   useEffect(() => {
     getLotacao();
-
     console.log(text);
   }, [isStarted]);
 
@@ -77,7 +66,6 @@ export function Lotacoes() {
         value={text}
         label="Pesquisar por Nome"
       />
-
       <FlatList
         data={lotacaoArray}
         renderItem={renderItem}
@@ -92,7 +80,6 @@ export function Lotacoes() {
         onPress={() => getLotacao()}>
         <Text style={styles.textStyle}>Atualizar</Text>
       </Pressable>
-
       <Modal
         animationType="slide"
         transparent={true}
@@ -104,7 +91,7 @@ export function Lotacoes() {
           <View style={styles.modalView}>
             <Text>Não foi possível achar a rota específica</Text>
             <Pressable
-              style={[styles.button, styles.buttonClose]}
+              style={[styles.button, styles.buttonscr]}
               onPress={() => setModalVisible(!modalVisible)}>
               <Text style={styles.textStyle}>Ok</Text>
             </Pressable>

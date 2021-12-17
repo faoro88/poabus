@@ -4,9 +4,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {Home} from './Home';
 import {Onibus} from './Onibus';
 import {Lotacoes} from './Lotacoes';
-import {Rotas} from './Rotas';
-
-//import {onibus, lotacao} from './services/api';
 
 const Stack = createStackNavigator();
 
@@ -17,22 +14,26 @@ function App() {
         <Stack.Screen
           name="Home"
           component={Home}
-          options={{title: 'PoaBus'}}
+          options={{
+            title: 'Linhas de Poa',
+            headerStyle: {borderBottomWidth: 3, elevation: 2},
+          }}
         />
         <Stack.Screen
           name="Onibus"
           component={Onibus}
-          options={{title: 'My home'}}
+          options={{
+            title: 'Ônibus',
+            headerStyle: {borderBottomWidth: 3, elevation: 2},
+          }}
         />
         <Stack.Screen
           name="Lotacoes"
           component={Lotacoes}
-          options={{title: 'Lotações'}}
-        />
-        <Stack.Screen
-          name="Rotas"
-          component={Rotas}
-          options={{title: 'My home'}}
+          options={{
+            title: 'Lotações',
+            headerStyle: {borderBottomWidth: 3, elevation: 2},
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>
