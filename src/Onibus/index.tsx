@@ -41,12 +41,14 @@ export function Onibus() {
   );
 
   useEffect(() => {
-    const found = onibusArray.filter(
-      element => element.nome === text.toUpperCase(),
-    );
-    console.log(found);
-    if (found.length > 0) {
-      setOnibusArray(found);
+    if (text.length > 1) {
+      const found = onibusArray.filter(el => el.nome.indexOf(text.toUpperCase()) > -1);
+      console.log(found);
+      if (found.length > 0) {
+        setOnibusArray(found);
+      }
+    } else {
+      getOnibus();
     }
   }, [text]);
 

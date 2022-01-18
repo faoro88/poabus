@@ -44,11 +44,17 @@ export function Home() {
   );
 
   useEffect(() => {
-    const found = lotacaoArray.filter(element => element.codigo === text);
-    if (found.length > 0) {
-      setListArray(found);
+    if (text.length > 1) {
+      const found = lotacaoArray.filter(el => el.codigo.indexOf(text.toUpperCase()) > -1);
+      console.log(found);
+      if (found.length > 0) {
+        setListArray(found);
+      }
+    } else {
+      setListArray([]);
     }
   }, [text]);
+
 
   useEffect(() => {
     getLotacao();
@@ -78,21 +84,13 @@ export function Home() {
         value={text}
         label="Pesquisa de linha por Código"
         placeholder="10.7-2"
+        keyboardType="decimal-pad"
       />
       <FlatList
         data={listArray}
         renderItem={renderItem}
         keyExtractor={item => item.id}
       />
-      <Pressable
-        style={({pressed}) => [
-          styles.buttonclr,
-          {backgroundColor: pressed ? '#8e44ad' : 'white'},
-          {opacity: pressed ? 0.5 : 1},
-        ]}
-        onPress={() => setListArray([])}>
-        <Text style={styles.text}>Limpar</Text>
-      </Pressable>
       <Modal
         animationType="slide"
         transparent={true}
@@ -116,17 +114,6 @@ export function Home() {
 }
 
 const styles = StyleSheet.create({
-  buttonclr: {
-    alignSelf: 'center',
-    alignContent: 'center',
-    borderRadius: 20,
-    width: 100,
-    padding: 10,
-    elevation: 2,
-    margin: 10,
-    borderColor: '#8e44ad',
-    backgroundColor: 'white',
-  },
   containerrow: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
