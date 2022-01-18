@@ -25,7 +25,7 @@ export function Onibus() {
   async function getOnibus() {
     const {data} = await onibus.get('');
     setOnibusArray(data);
-    setTitleText('Ônibus');
+    setTitleText('Lotação');
   }
 
   const renderItem = ({item}) => (
